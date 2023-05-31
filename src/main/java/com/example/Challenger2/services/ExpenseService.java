@@ -4,7 +4,7 @@ import com.example.Challenger2.entities.Expense;
 import com.example.Challenger2.entities.expenseDTOs.ExpenseDTO;
 import com.example.Challenger2.repositories.ExpenseRepository;
 import com.example.Challenger2.services.exceptions.BadRequestException;
-import jakarta.validation.Valid;
+import com.example.Challenger2.services.exceptions.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +22,16 @@ public class ExpenseService {
         }
 
         return expenseRepository.save(new Expense(expense));
+    }
+
+    public ExpenseDTO findById(Long id) {
+
+        return new ExpenseDTO(expenseRepository.findById(id).orElseThrow(() -> new NotFoundException("Id not found")));
+    }
+
+    public List<ExpenseDTO> findALl() {
+
+        return expenseRepository.findAll().stream().map(ExpenseDTO::new).toList();
     }
 
     private Boolean checkDescription(ExpenseDTO expenseDTO) {
