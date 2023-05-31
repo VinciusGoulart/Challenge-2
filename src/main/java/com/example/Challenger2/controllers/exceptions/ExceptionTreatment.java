@@ -11,6 +11,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -63,4 +64,24 @@ public class ExceptionTreatment {
 
         return ResponseEntity.status(error.getStatus()).body(error);
     }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<StandardError> handleMethodArgumentTypeMismatch(MethodArgumentTypeMismatchException ex,
+                                                                          HttpServletRequest request) {
+        String errorMessage = "Invalid parameter type";
+        String paramName = ex.getName();
+        Object paramValue = ex.getValue();
+
+        if (paramValue != null) {
+            errorMessage = "Failed to convert value " + paramValue + " of type " +
+                    paramValue.getClass().getSimpleName() + " to required type " +
+                    ex.getRequiredType().getSimpleName();
+        }
+
+        StandardError error = new StandardError(Instant.now(), HttpStatus.BAD_REQUEST.value(),
+                "Bad Request", errorMessage, request.getRequestURI());
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    }
+
 }

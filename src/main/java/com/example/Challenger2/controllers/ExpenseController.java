@@ -33,12 +33,28 @@ public class ExpenseController {
     @GetMapping(value = "/{id}")
     public ResponseEntity<ExpenseDTO> findById(@PathVariable Long id) {
 
-        return ResponseEntity.ok(expenseService.findById(id));
+        return ResponseEntity.ok(new ExpenseDTO(expenseService.findById(id)));
     }
 
     @GetMapping
     public ResponseEntity<List<ExpenseDTO>> findAll() {
 
         return ResponseEntity.ok(expenseService.findALl());
+    }
+
+    @PutMapping(value = "/{id}")
+    @Transactional
+    public ResponseEntity<ExpenseDTO> update(@PathVariable Long id, @RequestBody @Valid ExpenseDTO expenseDTO) {
+        expenseDTO = new ExpenseDTO(expenseService.updateExpense(id, expenseDTO));
+
+        return ResponseEntity.ok(expenseDTO);
+    }
+
+    @DeleteMapping(value = "/{id}")
+    @Transactional
+    public ResponseEntity delete(@PathVariable Long id) {
+        expenseService.deleteExpense(id);
+        
+        return ResponseEntity.noContent().build();
     }
 }
