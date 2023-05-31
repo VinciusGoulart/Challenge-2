@@ -41,4 +41,12 @@ public class ExpenseController {
 
         return ResponseEntity.ok(expenseService.findALl());
     }
+
+    @PutMapping(value = "/{id}")
+    @Transactional
+    public ResponseEntity<ExpenseDTO> update(@PathVariable Long id, @RequestBody @Valid ExpenseDTO expenseDTO){
+        expenseDTO = new ExpenseDTO(expenseService.updateExpense(id,expenseDTO));
+
+        return ResponseEntity.ok(expenseDTO);
+    }
 }

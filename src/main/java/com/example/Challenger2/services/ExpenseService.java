@@ -34,6 +34,16 @@ public class ExpenseService {
         return expenseRepository.findAll().stream().map(ExpenseDTO::new).toList();
     }
 
+    public Expense updateExpense(Long id, ExpenseDTO newExpense) {
+        Expense oldExpense = expenseRepository.findById(id).orElseThrow(() -> new NotFoundException("Id not found"));
+
+        expenseSetter(newExpense, oldExpense);
+
+        expenseRepository.save(oldExpense);
+
+        return oldExpense;
+    }
+
     private Boolean checkDescription(ExpenseDTO expenseDTO) {
         int month = expenseDTO.getDate().getMonthValue();
         int year = expenseDTO.getDate().getYear();
@@ -43,5 +53,11 @@ public class ExpenseService {
                 expenseDTO.getDescription(), month, year);
 
         return !list.isEmpty();
+    }
+
+    private void expenseSetter(ExpenseDTO newExp, Expense oldExp) {
+        oldExp.setDescription(newExp.getDescription());
+        oldExp.setPrice(newExp.getPrice());
+        oldExp.setDate(newExp.getDate());
     }
 }
