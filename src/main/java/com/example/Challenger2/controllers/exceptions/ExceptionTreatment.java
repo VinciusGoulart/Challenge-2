@@ -1,6 +1,7 @@
 package com.example.Challenger2.controllers.exceptions;
 
 import com.example.Challenger2.services.exceptions.BadRequestException;
+import com.example.Challenger2.services.exceptions.NotFoundException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
@@ -51,6 +52,14 @@ public class ExceptionTreatment {
 
         StandardError error = new StandardError(Instant.now(), HttpStatus.BAD_REQUEST.value(), "Bad Request",
                 errorMessage, request.getRequestURI());
+
+        return ResponseEntity.status(error.getStatus()).body(error);
+    }
+
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity notFound(NotFoundException notFound, HttpServletRequest request) {
+        StandardError error = new StandardError(Instant.now(), HttpStatus.NOT_FOUND.value(), "Not Found",
+                notFound.getMessage(), request.getRequestURI());
 
         return ResponseEntity.status(error.getStatus()).body(error);
     }
