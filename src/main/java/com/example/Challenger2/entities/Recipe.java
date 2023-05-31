@@ -1,21 +1,18 @@
-package com.example.entities;
+package com.example.Challenger2.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "tb_expenses")
+@Table(name = "tb_recipes")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Expense {
+public class Recipe {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
