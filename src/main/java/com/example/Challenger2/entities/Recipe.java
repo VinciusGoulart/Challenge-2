@@ -1,8 +1,9 @@
 package com.example.Challenger2.entities;
 
+import com.example.Challenger2.entities.recipeDTOs.RecipeDTO;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -12,13 +13,24 @@ import java.time.LocalDate;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode
 public class Recipe {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @NotBlank
     private String description;
     private BigDecimal price;
     @Column(name = "date_time")
-    private LocalDate date = LocalDate.now();
+    private LocalDate date;
+
+    public Recipe(RecipeDTO recipeDTO) {
+        description = recipeDTO.getDescription();
+        price = recipeDTO.getPrice();
+        date = recipeDTO.getDate();
+    }
+
 }
+
+
