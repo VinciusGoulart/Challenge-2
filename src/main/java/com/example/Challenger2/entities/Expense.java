@@ -1,36 +1,32 @@
 package com.example.Challenger2.entities;
 
-import com.example.Challenger2.entities.recipeDTOs.RecipeDTO;
+import com.example.Challenger2.entities.expenseDTOs.ExpenseDTO;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import lombok.*;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "tb_recipes")
+@Table(name = "tb_expenses")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
-public class Recipe {
+public class Expense {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotBlank
     private String description;
     private BigDecimal price;
     @Column(name = "date_time")
-    private LocalDate date;
+    private LocalDate date ;
 
-    public Recipe(RecipeDTO recipeDTO) {
-        description = recipeDTO.getDescription();
-        price = recipeDTO.getPrice();
-        date = recipeDTO.getDate();
+    public Expense(ExpenseDTO expenseDTO){
+        description = expenseDTO.getDescription();
+        price = expenseDTO.getPrice();
+        date = expenseDTO.getDate();
     }
-
 }
-
-
