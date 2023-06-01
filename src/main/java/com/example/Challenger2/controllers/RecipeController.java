@@ -6,13 +6,11 @@ import com.example.Challenger2.services.RecipeService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/recipes")
@@ -27,5 +25,18 @@ public class RecipeController {
         URI uri = builder.path("/{id}").buildAndExpand(insert.getId()).toUri();
         return ResponseEntity.created(uri).body(new RecipeDTO(insert));
     }
+
+    @GetMapping
+    public ResponseEntity<List<RecipeDTO>> findAll() {
+        List<RecipeDTO> list = service.findAll();
+        return ResponseEntity.ok().body(list);
+    }
+
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<RecipeDTO> findById(@PathVariable Long id){
+        RecipeDTO recipeDTO = new RecipeDTO(service.findById(id));
+        return ResponseEntity.ok(recipeDTO);
+    }
+
 
 }
