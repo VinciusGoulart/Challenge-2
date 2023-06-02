@@ -31,6 +31,16 @@ public class RecipeService {
         return recipeRepository.findById(id).orElseThrow(() -> new NotFoundException("ID Not Found"));
     }
 
+    public Recipe update(Long id, RecipeDTO recipeDTO) {
+        Recipe recipe = recipeRepository.getReferenceById(id);
+        updateData(recipeDTO, recipe);
+        return recipeRepository.save(recipe);
+    }
+
+    public void delete(Long id) {
+        recipeRepository.deleteById(id);
+    }
+
     private Boolean checkDescription(RecipeDTO recipeDTO) {
         Integer monthValue = recipeDTO.getDate().getMonthValue();
         Integer yearValue = recipeDTO.getDate().getYear();
@@ -38,5 +48,9 @@ public class RecipeService {
         return !list.isEmpty();
     }
 
-
+    private void updateData(RecipeDTO recipeDTO, Recipe recipe) {
+        recipe.setDescription(recipeDTO.getDescription());
+        recipe.setPrice(recipeDTO.getPrice());
+        recipe.setDate(recipeDTO.getDate());
+    }
 }
