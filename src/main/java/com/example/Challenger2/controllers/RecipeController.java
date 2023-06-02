@@ -33,10 +33,21 @@ public class RecipeController {
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<RecipeDTO> findById(@PathVariable Long id){
+    public ResponseEntity<RecipeDTO> findById(@PathVariable Long id) {
         RecipeDTO recipeDTO = new RecipeDTO(service.findById(id));
         return ResponseEntity.ok(recipeDTO);
     }
 
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<RecipeDTO> update(@PathVariable Long id, @RequestBody RecipeDTO recipeDTO) {
+        recipeDTO = new RecipeDTO(service.update(id, recipeDTO));
+        return ResponseEntity.ok(recipeDTO);
+    }
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity delete(@PathVariable Long id) {
+        service.delete(id);
+        return ResponseEntity.noContent().build();
+    }
 
 }
