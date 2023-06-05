@@ -1,5 +1,6 @@
 package com.example.Challenger2.entities;
 
+import com.example.Challenger2.entities.enums.Category;
 import com.example.Challenger2.entities.expenseDTOs.ExpenseDTO;
 import jakarta.persistence.*;
 import lombok.*;
@@ -23,10 +24,13 @@ public class Expense {
     private BigDecimal price;
     @Column(name = "date_time")
     private LocalDate date;
+    @Enumerated(EnumType.STRING)
+    private Category category = Category.Outras;
 
     public Expense(ExpenseDTO expenseDTO) {
         description = expenseDTO.getDescription();
         price = expenseDTO.getPrice();
         date = expenseDTO.getDate();
+        category = expenseDTO.getCategory();
     }
 }
