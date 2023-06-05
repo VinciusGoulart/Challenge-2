@@ -54,7 +54,7 @@ public class ExpenseController {
     @Transactional
     public ResponseEntity delete(@PathVariable Long id) {
         expenseService.deleteExpense(id);
-        
+
         return ResponseEntity.noContent().build();
     }
 }

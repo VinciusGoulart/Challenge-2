@@ -22,9 +22,9 @@ public class Expense {
     private String description;
     private BigDecimal price;
     @Column(name = "date_time")
-    private LocalDate date ;
+    private LocalDate date;
 
-    public Expense(ExpenseDTO expenseDTO){
+    public Expense(ExpenseDTO expenseDTO) {
         description = expenseDTO.getDescription();
         price = expenseDTO.getPrice();
         date = expenseDTO.getDate();

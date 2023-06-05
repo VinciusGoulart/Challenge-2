@@ -4,6 +4,7 @@ import com.example.Challenger2.entities.recipeDTOs.RecipeDTO;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -30,7 +31,6 @@ public class Recipe {
         price = recipeDTO.getPrice();
         date = recipeDTO.getDate();
     }
-
 }
 
 
