@@ -4,14 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public enum Category {
-    Alimentacao,
-    Saude,
-    Moradia,
-    Transporte,
-    Educacao,
-    Lazer,
-    Imprevistos,
-    Outras;
+    Food,
+    Health,
+    Housing,
+    Transport,
+    Education,
+    Leisure,
+    Contingencies,
+    Others;
 
     public static List<String> getCategories() {
         List<String> list = new ArrayList<>();
