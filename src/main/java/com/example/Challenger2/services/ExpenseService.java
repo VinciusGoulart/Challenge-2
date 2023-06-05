@@ -44,7 +44,7 @@ public class ExpenseService {
         return oldExpense;
     }
 
-    public void deleteExpense(Long id){
+    public void deleteExpense(Long id) {
         Expense expense = findById(id);
 
         expenseRepository.delete(expense);

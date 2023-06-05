@@ -1,7 +1,10 @@
 package com.example.Challenger2.entities.expenseDTOs;
 
 import com.example.Challenger2.entities.Expense;
+import com.example.Challenger2.entities.enums.Category;
 import jakarta.persistence.Column;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -10,6 +13,8 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+
+import static com.example.Challenger2.entities.enums.Category.getCategories;
 
 @Getter
 @Setter
@@ -29,10 +34,16 @@ public class ExpenseDTO {
     @NotNull(message = "Date is mandatory")
     @PastOrPresent(message = "Date must be in the past or present")
     private LocalDate date;
+    @NotNull()
+    @Enumerated(EnumType.STRING)
+    private Category category = Category.Outras;
 
     public ExpenseDTO(Expense expense) {
         description = expense.getDescription();
         price = expense.getPrice();
         date = expense.getDate();
+        category = expense.getCategory();
     }
+
+
 }
