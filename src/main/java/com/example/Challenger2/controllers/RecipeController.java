@@ -57,4 +57,12 @@ public class RecipeController {
         return ResponseEntity.noContent().build();
     }
 
+    @GetMapping(value = "/{year}/{month}")
+    public ResponseEntity<List<RecipeDTO>> findByYearAndMonth(@PathVariable(value = "year") Integer year,
+                                                              @PathVariable(value = "month") Integer month) {
+        List<RecipeDTO> list = service.findByYearAndMonth(year, month);
+
+        return ResponseEntity.ok().body(list);
+    }
+
 }
