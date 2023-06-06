@@ -1,7 +1,7 @@
 package com.example.Challenger2.services;
 
-import com.example.Challenger2.entities.Recipe;
 import com.example.Challenger2.entities.DTO.expenseDTOs.recipeDTOs.RecipeDTO;
+import com.example.Challenger2.entities.Recipe;
 import com.example.Challenger2.repositories.RecipeRepository;
 import com.example.Challenger2.services.exceptions.BadRequestException;
 import com.example.Challenger2.services.exceptions.NotFoundException;
@@ -39,6 +39,10 @@ public class RecipeService {
 
     public void delete(Long id) {
         recipeRepository.deleteById(id);
+    }
+
+    public List<RecipeDTO> findByDescription(String description) {
+        return recipeRepository.findByDescriptionIgnoreCase(description).stream().map(RecipeDTO::new).toList();
     }
 
     private Boolean checkDescription(RecipeDTO recipeDTO) {

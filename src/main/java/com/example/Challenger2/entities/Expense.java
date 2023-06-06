@@ -1,7 +1,7 @@
 package com.example.Challenger2.entities;
 
-import com.example.Challenger2.entities.enums.Category;
 import com.example.Challenger2.entities.DTO.expenseDTOs.ExpenseDTO;
+import com.example.Challenger2.entities.enums.Category;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -25,7 +25,7 @@ public class Expense {
     @Column(name = "date_time")
     private LocalDate date;
     @Enumerated(EnumType.STRING)
-    private Category category = Category.Others;
+    private Category category;
 
     public Expense(ExpenseDTO expenseDTO) {
         description = expenseDTO.getDescription();
