@@ -1,7 +1,7 @@
 package com.example.Challenger2.controllers;
 
+import com.example.Challenger2.entities.DTO.expenseDTOs.ExpenseDTO;
 import com.example.Challenger2.entities.Expense;
-import com.example.Challenger2.entities.expenseDTOs.ExpenseDTO;
 import com.example.Challenger2.services.ExpenseService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

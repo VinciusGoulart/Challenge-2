@@ -1,7 +1,7 @@
 package com.example.Challenger2.controllers;
 
+import com.example.Challenger2.entities.DTO.expenseDTOs.recipeDTOs.RecipeDTO;
 import com.example.Challenger2.entities.Recipe;
-import com.example.Challenger2.entities.recipeDTOs.RecipeDTO;
 import com.example.Challenger2.services.RecipeService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +27,15 @@ public class RecipeController {
     }
 
     @GetMapping
-    public ResponseEntity<List<RecipeDTO>> findAll() {
-        List<RecipeDTO> list = service.findAll();
+    public ResponseEntity<List<RecipeDTO>> findAll(@RequestParam(value = "search", required = false) String description) {
+        List<RecipeDTO> list;
+
+        if (description != null) {
+            list = service.findByDescription(description);
+            return ResponseEntity.ok().body(list);
+        }
+
+        list = service.findAll();
         return ResponseEntity.ok().body(list);
     }
 

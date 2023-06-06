@@ -1,4 +1,4 @@
-package com.example.Challenger2.entities.expenseDTOs;
+package com.example.Challenger2.entities.DTO.expenseDTOs;
 
 import com.example.Challenger2.entities.Expense;
 import com.example.Challenger2.entities.enums.Category;
@@ -13,8 +13,6 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-
-import static com.example.Challenger2.entities.enums.Category.getCategories;
 
 @Getter
 @Setter
@@ -34,9 +32,9 @@ public class ExpenseDTO {
     @NotNull(message = "Date is mandatory")
     @PastOrPresent(message = "Date must be in the past or present")
     private LocalDate date;
-    @NotNull()
+    @NotNull(message = "Valid options are: Food, Health, Housing, Transport, Education, Leisure, Contingencies, Others")
     @Enumerated(EnumType.STRING)
-    private Category category = Category.Outras;
+    private Category category = Category.Others;
 
     public ExpenseDTO(Expense expense) {
         description = expense.getDescription();

@@ -1,4 +1,4 @@
-package com.example.Challenger2.entities.recipeDTOs;
+package com.example.Challenger2.entities.DTO.expenseDTOs.recipeDTOs;
 
 import com.example.Challenger2.entities.Recipe;
 import jakarta.persistence.Column;
