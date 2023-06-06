@@ -42,7 +42,23 @@ public class RecipeService {
     }
 
     public List<RecipeDTO> findByDescription(String description) {
-        return recipeRepository.findByDescriptionIgnoreCase(description).stream().map(RecipeDTO::new).toList();
+        List<RecipeDTO> list = recipeRepository.findByDescriptionIgnoreCase(description).stream().map(RecipeDTO::new).toList();
+
+        if (list.isEmpty()) {
+            throw new NotFoundException("There is no recipe with this description");
+        }
+
+        return list;
+    }
+
+    public List<RecipeDTO> findByYearAndMonth(Integer year, Integer month) {
+        List<RecipeDTO> list = recipeRepository.findByYearAndMonth(year, month).stream().map(RecipeDTO::new).toList();
+
+        if (list.isEmpty()) {
+            throw new NotFoundException("There is no recipe on this date");
+        }
+
+        return list;
     }
 
     private Boolean checkDescription(RecipeDTO recipeDTO) {

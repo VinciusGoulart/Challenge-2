@@ -18,4 +18,8 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
 
     @Query("SELECT r FROM Recipe r WHERE LOWER(r.description) LIKE %:description%")
     List<Recipe> findByDescriptionIgnoreCase(@Param("description") String description);
+
+    @Query("SELECT r FROM Recipe r WHERE YEAR(r.date) = :year AND MONTH(r.date) = :month")
+    List<Recipe> findByYearAndMonth(@Param("year") Integer year, @Param("month") Integer month);
+
 }
