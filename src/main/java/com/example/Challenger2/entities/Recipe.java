@@ -1,6 +1,6 @@
 package com.example.Challenger2.entities;
 
-import com.example.Challenger2.entities.DTO.expenseDTOs.recipeDTOs.RecipeDTO;
+import com.example.Challenger2.entities.DTOs.recipeDTOs.RecipeDTO;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;

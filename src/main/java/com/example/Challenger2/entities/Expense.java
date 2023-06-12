@@ -1,6 +1,6 @@
 package com.example.Challenger2.entities;
 
-import com.example.Challenger2.entities.DTO.expenseDTOs.ExpenseDTO;
+import com.example.Challenger2.entities.DTOs.expenseDTOs.ExpenseDTO;
 import com.example.Challenger2.entities.enums.Category;
 import jakarta.persistence.*;
 import lombok.*;

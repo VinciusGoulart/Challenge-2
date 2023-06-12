@@ -1,4 +1,4 @@
-package com.example.Challenger2.entities.DTO.expenseDTOs;
+package com.example.Challenger2.entities.DTOs.expenseDTOs;
 
 import com.example.Challenger2.entities.Expense;
 import com.example.Challenger2.entities.enums.Category;
