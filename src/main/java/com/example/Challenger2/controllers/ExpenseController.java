@@ -37,9 +37,16 @@ public class ExpenseController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ExpenseDTO>> findAll() {
+    public ResponseEntity<List<ExpenseDTO>> findAll(@RequestParam(value = "search", required = false) String description) {
+        List<ExpenseDTO> list;
 
-        return ResponseEntity.ok(expenseService.findALl());
+        if (description != null) {
+            list = expenseService.findByDescription(description);
+            return ResponseEntity.ok().body(list);
+        }
+
+        list = expenseService.findAll();
+        return ResponseEntity.ok().body(list);
     }
 
     @PutMapping(value = "/{id}")
@@ -56,5 +63,13 @@ public class ExpenseController {
         expenseService.deleteExpense(id);
 
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping(value = "/{year}/{month}")
+    public ResponseEntity<List<ExpenseDTO>> findByYearAndMonth(@PathVariable(value = "year") Integer year,
+                                                               @PathVariable(value = "month") Integer month) {
+        List<ExpenseDTO> list = expenseService.findByYearAndMonth(year, month);
+
+        return ResponseEntity.ok().body(list);
     }
 }
