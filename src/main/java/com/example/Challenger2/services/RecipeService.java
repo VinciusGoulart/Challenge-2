@@ -42,7 +42,8 @@ public class RecipeService {
     }
 
     public List<RecipeDTO> findByDescription(String description) {
-        List<RecipeDTO> list = recipeRepository.findByDescriptionIgnoreCase(description).stream().map(RecipeDTO::new).toList();
+        List<RecipeDTO> list = recipeRepository.findByDescriptionIgnoreCase(
+                description).stream().map(RecipeDTO::new).toList();
 
         if (list.isEmpty()) {
             throw new NotFoundException("There is no recipe with this description");
