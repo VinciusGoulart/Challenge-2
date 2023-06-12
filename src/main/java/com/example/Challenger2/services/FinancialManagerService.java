@@ -1,11 +1,15 @@
 package com.example.Challenger2.services;
 
-import com.example.Challenger2.entities.FinancialManager;
-import com.example.Challenger2.entities.Recipe;
+import com.example.Challenger2.entities.DTOs.utils.FinancialManagerDTO;
+import com.example.Challenger2.entities.Expense;
+import com.example.Challenger2.entities.enums.Category;
 import com.example.Challenger2.repositories.ExpenseRepository;
 import com.example.Challenger2.repositories.RecipeRepository;
+import com.example.Challenger2.services.exceptions.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
 
 @Service
 public class FinancialManagerService {
@@ -16,16 +20,35 @@ public class FinancialManagerService {
     @Autowired
     private RecipeRepository recipeRepository;
 
-    public FinancialManager monthBalance(Integer year, Integer month) {
-        FinancialManager fin = new FinancialManager();
+    public FinancialManagerDTO monthSummary(Integer year, Integer month) {
+        FinancialManagerDTO fin = new FinancialManagerDTO();
 
+        // Cycles through the possible expenses for the month and fills in the category and expense fields for the month
+        expenseRepository.findByYearAndMonth(year, month).forEach(expense -> {
+            fin.setExpenseBalance(fin.getExpenseBalance().add(expense.getPrice()));
+
+            categoryMapper(fin, expense);
+        });
+
+        // Cycles through the possible recipes for the month and fills in the recipe fields for the month
         recipeRepository.findByYearAndMonth(year, month).forEach(recipe ->
                 fin.setRecipeBalance(fin.getRecipeBalance().add(recipe.getPrice())));
 
+        fin.setMonthBalance(fin.getExpenseBalance().add(fin.getRecipeBalance()));
+
+        if (fin.getMonthBalance().equals(BigDecimal.ZERO)) {
+            throw new NotFoundException("There is nothing for this month");
+        }
 
         return fin;
     }
-    private void recipeDataFiller(FinancialManager fin){
 
+    private void categoryMapper(FinancialManagerDTO fin, Expense expense) {
+
+        Category category = expense.getCategory();
+        BigDecimal value = fin.getCategoriesBalance().getOrDefault(category, BigDecimal.ZERO);
+        value = value.add(expense.getPrice());
+
+        fin.getCategoriesBalance().put(category, value);
     }
 }

@@ -1,6 +1,6 @@
 package com.example.Challenger2.controllers;
 
-import com.example.Challenger2.entities.FinancialManager;
+import com.example.Challenger2.entities.DTOs.utils.FinancialManagerDTO;
 import com.example.Challenger2.services.FinancialManagerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -15,11 +15,12 @@ public class FinancialManagerController {
 
     @Autowired
     private FinancialManagerService financialManagerService;
+
     @GetMapping(value = "/{year}/{month}")
-    public ResponseEntity<FinancialManager> monthBalance(@PathVariable(value = "year") Integer year,
-                                                         @PathVariable(value = "month") Integer month){
+    public ResponseEntity<FinancialManagerDTO> monthSummary(@PathVariable(value = "year") Integer year,
+                                                            @PathVariable(value = "month") Integer month) {
 
 
-        return ResponseEntity.ok(financialManagerService.monthBalance(year,month));
+        return ResponseEntity.ok(financialManagerService.monthSummary(year, month));
     }
 }

@@ -1,7 +1,6 @@
 package com.example.Challenger2.services;
 
-import com.example.Challenger2.entities.DTO.expenseDTOs.ExpenseDTO;
-import com.example.Challenger2.entities.DTO.expenseDTOs.recipeDTOs.RecipeDTO;
+import com.example.Challenger2.entities.DTOs.expenseDTOs.ExpenseDTO;
 import com.example.Challenger2.entities.Expense;
 import com.example.Challenger2.repositories.ExpenseRepository;
 import com.example.Challenger2.services.exceptions.BadRequestException;
