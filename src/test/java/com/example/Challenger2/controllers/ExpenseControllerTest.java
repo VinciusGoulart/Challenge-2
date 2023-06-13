@@ -23,6 +23,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 @AutoConfigureMockMvc
@@ -132,4 +133,54 @@ class ExpenseControllerTest {
     }
 
 
+    @Test
+    @DisplayName("Must return code 200 if expense exists")
+    void findById1() throws Exception {
+        Long id = 1L;
+
+        var response = mvc.perform(get("/expenses/{id}", id)).andReturn().getResponse();
+
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+    }
+
+    @Test
+    @DisplayName("Must return code 404 if expense does not exists")
+    void findById2() throws Exception {
+        Long id = 999999999L;
+
+        var response = mvc.perform(get("/expenses/{id}", id)).andReturn().getResponse();
+
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.NOT_FOUND.value());
+    }
+
+    @Test
+    @Transactional
+    @DisplayName("Must return code 200 and all expenses with same description")
+    void findAllDescriptionCase() throws Exception {
+        String description = "test";
+
+        var response = mvc.perform(get("/expenses")
+                        .param("search", description)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andReturn().getResponse();
+
+
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+        assertThat(response.getContentAsString()).contains("test");
+    }
+
+    @Test
+    @Transactional
+    @DisplayName("Must return code 404 if description does not exists")
+    void findAllDescriptionCase2() throws Exception {
+        String description = "banana";
+
+        var response = mvc.perform(get("/expenses")
+                        .param("search", description)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andReturn().getResponse();
+
+
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.NOT_FOUND.value());
+    }
 }
