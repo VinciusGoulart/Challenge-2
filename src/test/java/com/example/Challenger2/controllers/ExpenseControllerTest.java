@@ -15,6 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +27,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 @AutoConfigureMockMvc
 @AutoConfigureJsonTesters
+@ActiveProfiles("test")
 @SpringBootTest
 class ExpenseControllerTest {
     @Autowired
@@ -59,7 +61,7 @@ class ExpenseControllerTest {
     @DisplayName("Must return code 400 if exist a expense with the same description and year/month")
     void saveTest2() throws Exception {
         ExpenseDTO dto = new ExpenseDTO(new Expense(null, "test", new BigDecimal(2500),
-                LocalDate.of(1999, 10, 10), Category.Food));
+                LocalDate.of(1999, 02, 10), Category.Food));
 
         var response = mvc.perform(post("/expenses")
                 .contentType(MediaType.APPLICATION_JSON)
