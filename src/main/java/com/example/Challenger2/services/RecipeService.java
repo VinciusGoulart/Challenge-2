@@ -1,6 +1,7 @@
 package com.example.Challenger2.services;
 
 import com.example.Challenger2.entities.DTOs.recipeDTOs.RecipeDTO;
+import com.example.Challenger2.entities.Expense;
 import com.example.Challenger2.entities.Recipe;
 import com.example.Challenger2.repositories.RecipeRepository;
 import com.example.Challenger2.services.exceptions.BadRequestException;
@@ -32,13 +33,17 @@ public class RecipeService {
     }
 
     public Recipe update(Long id, RecipeDTO recipeDTO) {
-        Recipe recipe = recipeRepository.getReferenceById(id);
+        Recipe recipe = findById(id);
+
         updateData(recipeDTO, recipe);
+
         return recipeRepository.save(recipe);
     }
 
     public void delete(Long id) {
-        recipeRepository.deleteById(id);
+        Recipe recipe = findById(id);
+
+        recipeRepository.delete(recipe);
     }
 
     public List<RecipeDTO> findByDescription(String description) {
