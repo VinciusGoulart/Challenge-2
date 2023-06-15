@@ -177,7 +177,7 @@ class RecipeControllerTest {
 
     @Test
     @Transactional
-    @DisplayName("Must return code 200 and update the expense")
+    @DisplayName("Must return code 200 and update the recipe")
     void update1() throws Exception {
         Long id = 1L;
 
