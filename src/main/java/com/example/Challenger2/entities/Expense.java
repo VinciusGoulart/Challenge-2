@@ -33,10 +33,4 @@ public class Expense {
         date = expenseDTO.getDate();
         category = expenseDTO.getCategory();
     }
-    public Expense(Long id,String description, BigDecimal price, LocalDate date) {
-        this.description = description;
-        this.price = price;
-        this.date = date;
-    }
-
 }

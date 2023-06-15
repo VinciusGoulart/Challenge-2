@@ -6,6 +6,7 @@ import com.example.Challenger2.services.RecipeService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -20,6 +21,7 @@ public class RecipeController {
     private RecipeService service;
 
     @PostMapping
+    @Transactional
     public ResponseEntity<RecipeDTO> save(@RequestBody @Valid RecipeDTO recipeDTO, UriComponentsBuilder builder) {
         Recipe insert = service.save(recipeDTO);
         URI uri = builder.path("/{id}").buildAndExpand(insert.getId()).toUri();
@@ -46,12 +48,14 @@ public class RecipeController {
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<RecipeDTO> update(@PathVariable Long id, @RequestBody RecipeDTO recipeDTO) {
+    @Transactional
+    public ResponseEntity<RecipeDTO> update(@PathVariable Long id, @RequestBody @Valid RecipeDTO recipeDTO) {
         recipeDTO = new RecipeDTO(service.update(id, recipeDTO));
         return ResponseEntity.ok(recipeDTO);
     }
 
     @DeleteMapping(value = "/{id}")
+    @Transactional
     public ResponseEntity delete(@PathVariable Long id) {
         service.delete(id);
         return ResponseEntity.noContent().build();
