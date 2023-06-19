@@ -1,7 +1,7 @@
 package com.example.Challenger2.services;
 
+import com.example.Challenger2.entities.DTOs.expenseDTOs.ExpenseDTO;
 import com.example.Challenger2.entities.Expense;
-import com.example.Challenger2.entities.expenseDTOs.ExpenseDTO;
 import com.example.Challenger2.repositories.ExpenseRepository;
 import com.example.Challenger2.services.exceptions.BadRequestException;
 import com.example.Challenger2.services.exceptions.NotFoundException;
@@ -29,7 +29,7 @@ public class ExpenseService {
         return expenseRepository.findById(id).orElseThrow(() -> new NotFoundException("Id not found"));
     }
 
-    public List<ExpenseDTO> findALl() {
+    public List<ExpenseDTO> findAll() {
 
         return expenseRepository.findAll().stream().map(ExpenseDTO::new).toList();
     }
@@ -44,10 +44,32 @@ public class ExpenseService {
         return oldExpense;
     }
 
-    public void deleteExpense(Long id){
+    public void deleteExpense(Long id) {
         Expense expense = findById(id);
 
         expenseRepository.delete(expense);
+    }
+
+    public List<ExpenseDTO> findByDescription(String description) {
+        List<ExpenseDTO> list = expenseRepository.findByDescriptionIgnoreCase(
+                description).stream().map(ExpenseDTO::new).toList();
+
+        if (list.isEmpty()) {
+            throw new NotFoundException("There is no expense with this description");
+        }
+
+        return list;
+    }
+
+    public List<ExpenseDTO> findByYearAndMonth(Integer year, Integer month) {
+        List<ExpenseDTO> list = expenseRepository.findByYearAndMonth(
+                year, month).stream().map(ExpenseDTO::new).toList();
+
+        if (list.isEmpty()) {
+            throw new NotFoundException("There is no expense on this date");
+        }
+
+        return list;
     }
 
     private Boolean checkDescription(ExpenseDTO expenseDTO) {

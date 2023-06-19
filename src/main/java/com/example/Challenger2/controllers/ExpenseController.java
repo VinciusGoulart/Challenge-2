@@ -1,7 +1,7 @@
 package com.example.Challenger2.controllers;
 
+import com.example.Challenger2.entities.DTOs.expenseDTOs.ExpenseDTO;
 import com.example.Challenger2.entities.Expense;
-import com.example.Challenger2.entities.expenseDTOs.ExpenseDTO;
 import com.example.Challenger2.services.ExpenseService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,9 +37,16 @@ public class ExpenseController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ExpenseDTO>> findAll() {
+    public ResponseEntity<List<ExpenseDTO>> findAll(@RequestParam(value = "search", required = false) String description) {
+        List<ExpenseDTO> list;
 
-        return ResponseEntity.ok(expenseService.findALl());
+        if (description != null) {
+            list = expenseService.findByDescription(description);
+            return ResponseEntity.ok().body(list);
+        }
+
+        list = expenseService.findAll();
+        return ResponseEntity.ok().body(list);
     }
 
     @PutMapping(value = "/{id}")
@@ -54,7 +61,15 @@ public class ExpenseController {
     @Transactional
     public ResponseEntity delete(@PathVariable Long id) {
         expenseService.deleteExpense(id);
-        
+
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping(value = "/{year}/{month}")
+    public ResponseEntity<List<ExpenseDTO>> findByYearAndMonth(@PathVariable(value = "year") Integer year,
+                                                               @PathVariable(value = "month") Integer month) {
+        List<ExpenseDTO> list = expenseService.findByYearAndMonth(year, month);
+
+        return ResponseEntity.ok().body(list);
     }
 }
