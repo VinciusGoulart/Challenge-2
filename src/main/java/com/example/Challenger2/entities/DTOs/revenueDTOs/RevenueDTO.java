@@ -1,6 +1,6 @@
-package com.example.Challenger2.entities.DTOs.recipeDTOs;
+package com.example.Challenger2.entities.DTOs.revenueDTOs;
 
-import com.example.Challenger2.entities.Recipe;
+import com.example.Challenger2.entities.Revenue;
 import jakarta.persistence.Column;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
@@ -16,7 +16,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
-public class RecipeDTO {
+public class RevenueDTO {
 
     @NotBlank(message = "Description is mandatory")
     private String description;
@@ -30,10 +30,10 @@ public class RecipeDTO {
     @PastOrPresent(message = "Date must be in the past or present")
     private LocalDate date;
 
-    public RecipeDTO(Recipe recipe) {
-        this.description = recipe.getDescription();
-        this.price = recipe.getPrice();
-        this.date = recipe.getDate();
+    public RevenueDTO(Revenue revenue) {
+        this.description = revenue.getDescription();
+        this.price = revenue.getPrice();
+        this.date = revenue.getDate();
     }
 
 }

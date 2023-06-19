@@ -1,7 +1,7 @@
 package com.example.Challenger2.controllers;
 
-import com.example.Challenger2.entities.DTOs.recipeDTOs.RecipeDTO;
-import com.example.Challenger2.entities.Recipe;
+import com.example.Challenger2.entities.DTOs.revenueDTOs.RevenueDTO;
+import com.example.Challenger2.entities.Revenue;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,11 +28,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @AutoConfigureJsonTesters
 @ActiveProfiles("test")
 @SpringBootTest
-class RecipeControllerTest {
+class RevenueControllerTest {
 
     @Autowired
     private MockMvc mvc;
-    private JacksonTester<RecipeDTO> dtoJacksonTester;
+    private JacksonTester<RevenueDTO> dtoJacksonTester;
 
     @BeforeEach
     void setUp() {
@@ -43,12 +43,12 @@ class RecipeControllerTest {
 
     @Test
     @Transactional
-    @DisplayName("Must return code 200 if doesn't exist a recipe with the same description and year/month")
+    @DisplayName("Must return code 200 if doesn't exist a revenue with the same description and year/month")
     void saveTest1() throws Exception {
-        RecipeDTO dto = new RecipeDTO(new Recipe(null, "test2", new BigDecimal(2500),
+        RevenueDTO dto = new RevenueDTO(new Revenue(null, "test2", new BigDecimal(2500),
                 LocalDate.of(1999, 10, 10)));
 
-        var response = mvc.perform(post("/recipes")
+        var response = mvc.perform(post("/revenues")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(dtoJacksonTester.write(dto).getJson())
         ).andReturn().getResponse();
@@ -58,12 +58,12 @@ class RecipeControllerTest {
 
     @Test
     @Transactional
-    @DisplayName("Must return code 400 if exist a recipe with the same description and year/month")
+    @DisplayName("Must return code 400 if exist a revenue with the same description and year/month")
     void saveTest2() throws Exception {
-        RecipeDTO dto = new RecipeDTO(new Recipe(null, "test", new BigDecimal(2500),
+        RevenueDTO dto = new RevenueDTO(new Revenue(null, "test", new BigDecimal(2500),
                 LocalDate.of(1999, 10, 10)));
 
-        var response = mvc.perform(post("/recipes")
+        var response = mvc.perform(post("/revenues")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(dtoJacksonTester.write(dto).getJson())
         ).andReturn().getResponse();
@@ -75,10 +75,10 @@ class RecipeControllerTest {
     @Transactional
     @DisplayName("Must return code 400 if mandatory fields price or  date  are not valid")
     void saveTest3() throws Exception {
-        RecipeDTO dto = new RecipeDTO(new Recipe(null, "test3", null,
+        RevenueDTO dto = new RevenueDTO(new Revenue(null, "test3", null,
                 LocalDate.of(1999, 10, 10)));
 
-        var response = mvc.perform(post("/recipes")
+        var response = mvc.perform(post("/revenues")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(dtoJacksonTester.write(dto).getJson())
         ).andReturn().getResponse();
@@ -90,23 +90,23 @@ class RecipeControllerTest {
     @Transactional
     @DisplayName("Must return code 400 if business rules are not valid")
     void saveTest4() throws Exception {
-        RecipeDTO dto = new RecipeDTO(new Recipe(null, "", new BigDecimal(2500),
+        RevenueDTO dto = new RevenueDTO(new Revenue(null, "", new BigDecimal(2500),
                 LocalDate.of(1999, 10, 10)));
-        RecipeDTO dto2 = new RecipeDTO(new Recipe(null, "test4", new BigDecimal(-2500),
+        RevenueDTO dto2 = new RevenueDTO(new Revenue(null, "test4", new BigDecimal(-2500),
                 LocalDate.of(1999, 10, 10)));
-        RecipeDTO dto3 = new RecipeDTO(new Recipe(null, "test4", new BigDecimal(2500),
+        RevenueDTO dto3 = new RevenueDTO(new Revenue(null, "test4", new BigDecimal(2500),
                 LocalDate.of(2100, 10, 10)));
 
 
-        var response = mvc.perform(post("/recipes")
+        var response = mvc.perform(post("/revenues")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(dtoJacksonTester.write(dto).getJson())
         ).andReturn().getResponse();
-        var response2 = mvc.perform(post("/recipes")
+        var response2 = mvc.perform(post("/revenues")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(dtoJacksonTester.write(dto2).getJson())
         ).andReturn().getResponse();
-        var response3 = mvc.perform(post("/recipes")
+        var response3 = mvc.perform(post("/revenues")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(dtoJacksonTester.write(dto3).getJson())
         ).andReturn().getResponse();
@@ -124,32 +124,32 @@ class RecipeControllerTest {
 
 
     @Test
-    @DisplayName("Must return code 200 if recipe exists")
+    @DisplayName("Must return code 200 if revenue exists")
     void findById1() throws Exception {
         Long id = 1L;
 
-        var response = mvc.perform(get("/recipes/{id}", id)).andReturn().getResponse();
+        var response = mvc.perform(get("/revenues/{id}", id)).andReturn().getResponse();
 
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
     }
 
     @Test
-    @DisplayName("Must return code 404 if recipe does not exists")
+    @DisplayName("Must return code 404 if revenue does not exists")
     void findById2() throws Exception {
         Long id = 999999999L;
 
-        var response = mvc.perform(get("/recipes/{id}", id)).andReturn().getResponse();
+        var response = mvc.perform(get("/revenues/{id}", id)).andReturn().getResponse();
 
         assertThat(response.getStatus()).isEqualTo(HttpStatus.NOT_FOUND.value());
     }
 
     @Test
     @Transactional
-    @DisplayName("Must return code 200 and all recipes with same description")
+    @DisplayName("Must return code 200 and all revenues with same description")
     void findAllDescriptionCase() throws Exception {
         String description = "test";
 
-        var response = mvc.perform(get("/recipes")
+        var response = mvc.perform(get("/revenues")
                         .param("search", description)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andReturn().getResponse();
@@ -165,7 +165,7 @@ class RecipeControllerTest {
     void findAllDescriptionCase2() throws Exception {
         String description = "banana";
 
-        var response = mvc.perform(get("/recipes")
+        var response = mvc.perform(get("/revenues")
                         .param("search", description)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andReturn().getResponse();
@@ -177,14 +177,14 @@ class RecipeControllerTest {
 
     @Test
     @Transactional
-    @DisplayName("Must return code 200 and update the recipe")
+    @DisplayName("Must return code 200 and update the revenue")
     void update1() throws Exception {
         Long id = 1L;
 
-        RecipeDTO dto = new RecipeDTO(new Recipe(null, "test2", new BigDecimal(2500),
+        RevenueDTO dto = new RevenueDTO(new Revenue(null, "test2", new BigDecimal(2500),
                 LocalDate.of(1999, 10, 10)));
 
-        var response = mvc.perform(put("/recipes/{id}", id)
+        var response = mvc.perform(put("/revenues/{id}", id)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(dtoJacksonTester.write(dto).getJson()))
                 .andReturn().getResponse();
@@ -194,14 +194,14 @@ class RecipeControllerTest {
 
     @Test
     @Transactional
-    @DisplayName("Must return code 404 if recipe does not exists")
+    @DisplayName("Must return code 404 if revenue does not exists")
     void update2() throws Exception {
         Long id = 999L;
 
-        RecipeDTO dto = new RecipeDTO(new Recipe(null, "test2", new BigDecimal(2500),
+        RevenueDTO dto = new RevenueDTO(new Revenue(null, "test2", new BigDecimal(2500),
                 LocalDate.of(1999, 10, 10)));
 
-        var response = mvc.perform(put("/recipes/{id}", id)
+        var response = mvc.perform(put("/revenues/{id}", id)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(dtoJacksonTester.write(dto).getJson()))
                 .andReturn().getResponse();
@@ -215,23 +215,23 @@ class RecipeControllerTest {
     void update3() throws Exception {
         Long id = 1L;
 
-        RecipeDTO dto = new RecipeDTO(new Recipe(null, "", new BigDecimal(2500),
+        RevenueDTO dto = new RevenueDTO(new Revenue(null, "", new BigDecimal(2500),
                 LocalDate.of(1999, 10, 10)));
-        RecipeDTO dto2 = new RecipeDTO(new Recipe(null, "test4", new BigDecimal(-2500),
+        RevenueDTO dto2 = new RevenueDTO(new Revenue(null, "test4", new BigDecimal(-2500),
                 LocalDate.of(1999, 10, 10)));
-        RecipeDTO dto3 = new RecipeDTO(new Recipe(null, "test4", new BigDecimal(2500),
+        RevenueDTO dto3 = new RevenueDTO(new Revenue(null, "test4", new BigDecimal(2500),
                 LocalDate.of(2100, 10, 10)));
 
 
-        var response = mvc.perform(put("/recipes/{id}", id)
+        var response = mvc.perform(put("/revenues/{id}", id)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(dtoJacksonTester.write(dto).getJson()))
                 .andReturn().getResponse();
-        var response2 = mvc.perform(put("/recipes/{id}", id)
+        var response2 = mvc.perform(put("/revenues/{id}", id)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(dtoJacksonTester.write(dto2).getJson()))
                 .andReturn().getResponse();
-        var response3 = mvc.perform(put("/recipes/{id}", id)
+        var response3 = mvc.perform(put("/revenues/{id}", id)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(dtoJacksonTester.write(dto3).getJson()))
                 .andReturn().getResponse();
@@ -250,34 +250,34 @@ class RecipeControllerTest {
 
     @Test
     @Transactional
-    @DisplayName("Must return 204 if recipe is deleted")
+    @DisplayName("Must return 204 if revenue is deleted")
     void delete1() throws Exception {
         Long id = 1L;
 
-        var response = mvc.perform(delete("/recipes/{id}", id)).andReturn().getResponse();
+        var response = mvc.perform(delete("/revenues/{id}", id)).andReturn().getResponse();
 
         assertThat(response.getStatus()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
 
     @Test
     @Transactional
-    @DisplayName("Must return 404 if recipe does not exists")
+    @DisplayName("Must return 404 if revenue does not exists")
     void delete2() throws Exception {
         Long id = 9999999L;
 
-        var response = mvc.perform(delete("/recipes/{id}", id)).andReturn().getResponse();
+        var response = mvc.perform(delete("/revenues/{id}", id)).andReturn().getResponse();
 
         assertThat(response.getStatus()).isEqualTo(HttpStatus.NOT_FOUND.value());
     }
 
     @Test
     @Transactional
-    @DisplayName("You must return code 200 and all recipes with the date provided")
+    @DisplayName("You must return code 200 and all revenue with the date provided")
     void findByYearAndMonth() throws Exception {
         Integer year = 1999;
         Integer month = 10;
 
-        var response = mvc.perform(get("/recipes/{year}/{month}", year, month)
+        var response = mvc.perform(get("/revenues/{year}/{month}", year, month)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andReturn().getResponse();
 
@@ -287,12 +287,12 @@ class RecipeControllerTest {
 
     @Test
     @Transactional
-    @DisplayName("Must return code 404 if the recipe does not exist on the indicated date")
+    @DisplayName("Must return code 404 if the revenue does not exist on the indicated date")
     void findByYearAndMonth2() throws Exception {
         Integer year = 2023;
         Integer month = 5;
 
-        var response = mvc.perform(get("/recipes/{year}/{month}", year, month)
+        var response = mvc.perform(get("/revenues/{year}/{month}", year, month)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andReturn().getResponse();
 

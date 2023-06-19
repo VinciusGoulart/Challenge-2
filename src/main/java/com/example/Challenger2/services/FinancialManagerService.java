@@ -4,7 +4,7 @@ import com.example.Challenger2.entities.DTOs.utils.FinancialManagerDTO;
 import com.example.Challenger2.entities.Expense;
 import com.example.Challenger2.entities.enums.Category;
 import com.example.Challenger2.repositories.ExpenseRepository;
-import com.example.Challenger2.repositories.RecipeRepository;
+import com.example.Challenger2.repositories.RevenueRepository;
 import com.example.Challenger2.services.exceptions.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,7 +18,7 @@ public class FinancialManagerService {
     private ExpenseRepository expenseRepository;
 
     @Autowired
-    private RecipeRepository recipeRepository;
+    private RevenueRepository revenueRepository;
 
     public FinancialManagerDTO monthSummary(Integer year, Integer month) {
         FinancialManagerDTO fin = new FinancialManagerDTO();
@@ -30,11 +30,11 @@ public class FinancialManagerService {
             categoryMapper(fin, expense);
         });
 
-        // Cycles through the possible recipes for the month and fills in the recipe fields for the month
-        recipeRepository.findByYearAndMonth(year, month).forEach(recipe ->
-                fin.setRecipeBalance(fin.getRecipeBalance().add(recipe.getPrice())));
+        // Cycles through the possible revenues for the month and fills in the revenue fields for the month
+        revenueRepository.findByYearAndMonth(year, month).forEach(revenue ->
+                fin.setRevenueBalance(fin.getRevenueBalance().add(revenue.getPrice())));
 
-        fin.setMonthBalance(fin.getExpenseBalance().add(fin.getRecipeBalance()));
+        fin.setMonthBalance(fin.getExpenseBalance().add(fin.getRevenueBalance()));
 
         if (fin.getMonthBalance().equals(BigDecimal.ZERO)) {
             throw new NotFoundException("There is nothing for this month");
