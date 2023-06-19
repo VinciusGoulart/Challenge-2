@@ -16,7 +16,7 @@ import java.util.HashMap;
 public class FinancialManagerDTO {
 
     private BigDecimal expenseBalance = BigDecimal.ZERO;
-    private BigDecimal recipeBalance = BigDecimal.ZERO;
+    private BigDecimal revenueBalance = BigDecimal.ZERO;
     private BigDecimal monthBalance = BigDecimal.ZERO;
     private HashMap<Category, BigDecimal> categoriesBalance = new HashMap<>();
 
