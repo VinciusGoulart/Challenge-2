@@ -7,6 +7,7 @@ import com.example.Challenger2.services.exceptions.BadRequestException;
 import com.example.Challenger2.services.exceptions.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -15,7 +16,7 @@ public class ExpenseService {
 
     @Autowired
     private ExpenseRepository expenseRepository;
-
+    @Transactional()
     public Expense save(ExpenseDTO expense) {
         if (checkDescription(expense)) {
             throw new BadRequestException("This expense already exists");
@@ -24,16 +25,19 @@ public class ExpenseService {
         return expenseRepository.save(new Expense(expense));
     }
 
+    @Transactional(readOnly = true)
     public Expense findById(Long id) {
 
         return expenseRepository.findById(id).orElseThrow(() -> new NotFoundException("Id not found"));
     }
 
+    @Transactional(readOnly = true)
     public List<ExpenseDTO> findAll() {
 
         return expenseRepository.findAll().stream().map(ExpenseDTO::new).toList();
     }
 
+    @Transactional()
     public Expense updateExpense(Long id, ExpenseDTO newExpense) {
         Expense oldExpense = findById(id);
 
@@ -44,12 +48,14 @@ public class ExpenseService {
         return oldExpense;
     }
 
+    @Transactional()
     public void deleteExpense(Long id) {
         Expense expense = findById(id);
 
         expenseRepository.delete(expense);
     }
 
+    @Transactional(readOnly = true)
     public List<ExpenseDTO> findByDescription(String description) {
         List<ExpenseDTO> list = expenseRepository.findByDescriptionIgnoreCase(
                 description).stream().map(ExpenseDTO::new).toList();
@@ -61,6 +67,7 @@ public class ExpenseService {
         return list;
     }
 
+    @Transactional(readOnly = true)
     public List<ExpenseDTO> findByYearAndMonth(Integer year, Integer month) {
         List<ExpenseDTO> list = expenseRepository.findByYearAndMonth(
                 year, month).stream().map(ExpenseDTO::new).toList();

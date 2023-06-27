@@ -6,7 +6,6 @@ import com.example.Challenger2.services.RevenueService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -21,7 +20,6 @@ public class RevenueController {
     private RevenueService service;
 
     @PostMapping
-    @Transactional
     public ResponseEntity<RevenueDTO> save(@RequestBody @Valid RevenueDTO revenueDTO, UriComponentsBuilder builder) {
         Revenue insert = service.save(revenueDTO);
         URI uri = builder.path("/{id}").buildAndExpand(insert.getId()).toUri();
@@ -48,14 +46,12 @@ public class RevenueController {
     }
 
     @PutMapping(value = "/{id}")
-    @Transactional
     public ResponseEntity<RevenueDTO> update(@PathVariable Long id, @RequestBody @Valid RevenueDTO revenueDTO) {
         revenueDTO = new RevenueDTO(service.update(id, revenueDTO));
         return ResponseEntity.ok(revenueDTO);
     }
 
     @DeleteMapping(value = "/{id}")
-    @Transactional
     public ResponseEntity delete(@PathVariable Long id) {
         service.delete(id);
         return ResponseEntity.noContent().build();

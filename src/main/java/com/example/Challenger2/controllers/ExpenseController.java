@@ -21,7 +21,6 @@ public class ExpenseController {
     private ExpenseService expenseService;
 
     @PostMapping
-    @Transactional
     public ResponseEntity<ExpenseDTO> save(@RequestBody @Valid ExpenseDTO expense, UriComponentsBuilder builder) {
         Expense insert = expenseService.save(expense);
 
@@ -50,7 +49,6 @@ public class ExpenseController {
     }
 
     @PutMapping(value = "/{id}")
-    @Transactional
     public ResponseEntity<ExpenseDTO> update(@PathVariable Long id, @RequestBody @Valid ExpenseDTO expenseDTO) {
         expenseDTO = new ExpenseDTO(expenseService.updateExpense(id, expenseDTO));
 
@@ -58,7 +56,6 @@ public class ExpenseController {
     }
 
     @DeleteMapping(value = "/{id}")
-    @Transactional
     public ResponseEntity delete(@PathVariable Long id) {
         expenseService.deleteExpense(id);
 
