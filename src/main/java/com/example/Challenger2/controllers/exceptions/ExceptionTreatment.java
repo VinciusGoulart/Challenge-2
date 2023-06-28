@@ -1,6 +1,7 @@
 package com.example.Challenger2.controllers.exceptions;
 
 import com.example.Challenger2.services.exceptions.BadRequestException;
+import com.example.Challenger2.services.exceptions.InvalidJwtAuthenticationException;
 import com.example.Challenger2.services.exceptions.NotFoundException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -84,4 +85,11 @@ public class ExceptionTreatment {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
 
+    @ExceptionHandler(InvalidJwtAuthenticationException.class)
+    public ResponseEntity notFound(InvalidJwtAuthenticationException ex, HttpServletRequest request) {
+        StandardError error = new StandardError(Instant.now(), HttpStatus.FORBIDDEN.value(), "Forbidden",
+                ex.getMessage(), request.getRequestURI());
+
+        return ResponseEntity.status(error.getStatus()).body(error);
+    }
 }
