@@ -1,5 +1,6 @@
 package com.example.Challenger2.controllers.exceptions;
 
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.example.Challenger2.services.exceptions.BadRequestException;
 import com.example.Challenger2.services.exceptions.InvalidJwtAuthenticationException;
 import com.example.Challenger2.services.exceptions.NotFoundException;
@@ -8,6 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -21,7 +23,7 @@ import java.util.List;
 @ControllerAdvice
 public class ExceptionTreatment {
     @ExceptionHandler(BadRequestException.class)
-    public ResponseEntity badRequest(BadRequestException badRequest, HttpServletRequest request) {
+    public final ResponseEntity badRequest(BadRequestException badRequest, HttpServletRequest request) {
         StandardError error = new StandardError(Instant.now(), HttpStatus.BAD_REQUEST.value(), "Bad Request",
                 badRequest.getMessage(), request.getRequestURI());
 
@@ -29,7 +31,7 @@ public class ExceptionTreatment {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity invalidField(MethodArgumentNotValidException exception, HttpServletRequest request) {
+    public final ResponseEntity invalidField(MethodArgumentNotValidException exception, HttpServletRequest request) {
         List<FieldError> fieldErrors = exception.getBindingResult().getFieldErrors();
 
         List<String> errors = new ArrayList<>();
@@ -44,7 +46,7 @@ public class ExceptionTreatment {
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity messageNotReadable(HttpMessageNotReadableException exception, HttpServletRequest request) {
+    public final ResponseEntity messageNotReadable(HttpMessageNotReadableException exception, HttpServletRequest request) {
         String errorMessage = "Invalid request body";
 
         if (exception.getCause() instanceof InvalidFormatException) {
@@ -59,7 +61,7 @@ public class ExceptionTreatment {
     }
 
     @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity notFound(NotFoundException notFound, HttpServletRequest request) {
+    public final ResponseEntity notFound(NotFoundException notFound, HttpServletRequest request) {
         StandardError error = new StandardError(Instant.now(), HttpStatus.NOT_FOUND.value(), "Not Found",
                 notFound.getMessage(), request.getRequestURI());
 
@@ -67,8 +69,8 @@ public class ExceptionTreatment {
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    public ResponseEntity<StandardError> handleMethodArgumentTypeMismatch(MethodArgumentTypeMismatchException ex,
-                                                                          HttpServletRequest request) {
+    public final ResponseEntity<StandardError> handleMethodArgumentTypeMismatch(MethodArgumentTypeMismatchException ex,
+                                                                                HttpServletRequest request) {
         String errorMessage = "Invalid parameter type";
         String paramName = ex.getName();
         Object paramValue = ex.getValue();
@@ -86,10 +88,27 @@ public class ExceptionTreatment {
     }
 
     @ExceptionHandler(InvalidJwtAuthenticationException.class)
-    public ResponseEntity notFound(InvalidJwtAuthenticationException ex, HttpServletRequest request) {
+    public final ResponseEntity notFound(InvalidJwtAuthenticationException ex, HttpServletRequest request) {
         StandardError error = new StandardError(Instant.now(), HttpStatus.FORBIDDEN.value(), "Forbidden",
                 ex.getMessage(), request.getRequestURI());
 
         return ResponseEntity.status(error.getStatus()).body(error);
     }
+
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public final ResponseEntity invalidCredentials(UsernameNotFoundException ex, HttpServletRequest request) {
+        StandardError error = new StandardError(Instant.now(), HttpStatus.FORBIDDEN.value(), "Access denied",
+                ex.getMessage(), request.getRequestURI());
+
+        return ResponseEntity.status(error.getStatus()).body(error);
+    }
+
+    @ExceptionHandler(TokenExpiredException.class)
+    public final ResponseEntity invalidCredentials(TokenExpiredException ex, HttpServletRequest request) {
+        StandardError error = new StandardError(Instant.now(), HttpStatus.FORBIDDEN.value(), "Access denied",
+                ex.getMessage(), request.getRequestURI());
+
+        return ResponseEntity.status(error.getStatus()).body(error);
+    }
 }
+

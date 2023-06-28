@@ -1,8 +1,6 @@
 package com.example.Challenger2.services;
 
-import com.example.Challenger2.entities.User;
 import com.example.Challenger2.repositories.UserRepository;
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -19,14 +17,11 @@ public class UserService implements UserDetailsService {
         this.userRepository = userRepository;
     }
 
-    public User findById(Long id ){
-
-    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         var user = userRepository.findByUsername(username)
-                .orElseThrow(()-> new UsernameNotFoundException("Username"+ username + "not found"));
+                .orElseThrow(() -> new UsernameNotFoundException("Username " + username + " not found"));
 
         return user;
     }
