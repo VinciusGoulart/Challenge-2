@@ -1,5 +1,8 @@
 package com.example.Challenger2.services;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.interfaces.DecodedJWT;
+import com.auth0.jwt.interfaces.JWTVerifier;
 import com.example.Challenger2.entities.DTOs.security.AccountCredentialsDTO;
 import com.example.Challenger2.entities.DTOs.security.TokenDTO;
 import com.example.Challenger2.repositories.UserRepository;
@@ -11,6 +14,8 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class AuthService {
@@ -41,6 +46,19 @@ public class AuthService {
         } catch (Exception e) {
             throw new BadCredentialsException("Invalid username/password supplied!");
         }
+    }
+
+    public ResponseEntity refreshToken(String username, String refreshToken) {
+        var user = repository.findByUsername(username);
+
+        var tokenResponse = new TokenDTO();
+
+        if (user != null) {
+            tokenResponse = jwtTokenProvider.refreshToken(refreshToken);
+        } else {
+            throw new UsernameNotFoundException("Username " + username + " not found!");
+        }
+        return ResponseEntity.ok(tokenResponse);
     }
 
 }

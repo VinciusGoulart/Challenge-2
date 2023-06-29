@@ -45,13 +45,27 @@ public class JwtTokenProvider {
     public TokenDTO createAccessToken(String username, List<String> roles) {
         Date now = new Date();
         Date validity = new Date(now.getTime() + validityInMilliseconds);
-        var accessToken = getAccesToken(username, roles, now, validity);
+        var accessToken = getAccessToken(username, roles, now, validity);
         var refreshToken = getRefreshToken(username, roles, now);
 
         return new TokenDTO(username, true, now, validity, accessToken, refreshToken);
     }
 
-    private String getAccesToken(String username, List<String> roles, Date now, Date validity) {
+    public TokenDTO refreshToken(String refreshToken) {
+        if (refreshToken.contains("Bearer ") && refreshToken.length() == 231){
+
+            refreshToken = refreshToken.substring("Bearer ".length());
+        }
+
+        JWTVerifier verifier = JWT.require(algorithm).build();
+        DecodedJWT decodedJWT = verifier.verify(refreshToken);
+
+        String username = decodedJWT.getSubject();
+        List<String> roles = decodedJWT.getClaim("roles").asList(String.class);
+
+        return createAccessToken(username,roles);
+    }
+    private String getAccessToken(String username, List<String> roles, Date now, Date validity) {
         String issuerURL = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
         return JWT.create()
                 .withClaim("roles", roles)
@@ -80,13 +94,13 @@ public class JwtTokenProvider {
         );
     }
 
-    private DecodedJWT decodedToken(String token) throws JWTDecodeException{
+    private DecodedJWT decodedToken(String token) throws JWTDecodeException {
 
-            Algorithm alg = Algorithm.HMAC256(secretKey.getBytes());
-            JWTVerifier verifier = JWT.require(algorithm).build();
-            DecodedJWT decodedJWT = verifier.verify(token);
+        Algorithm alg = Algorithm.HMAC256(secretKey.getBytes());
+        JWTVerifier verifier = JWT.require(algorithm).build();
+        DecodedJWT decodedJWT = verifier.verify(token);
 
-            return decodedJWT;
+        return decodedJWT;
 
     }
 
