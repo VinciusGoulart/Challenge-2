@@ -1,5 +1,6 @@
 package com.example.Challenger2.security.util;
 
+import com.auth0.jwt.exceptions.JWTDecodeException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
@@ -26,13 +27,13 @@ public class JwtTokenFilter extends GenericFilterBean {
 
         String token = jwtTokenProvider.resolveToken((HttpServletRequest) servletRequest);
 
+
         if (token != null && jwtTokenProvider.validateToken(token)) {
             Authentication auth = jwtTokenProvider.getAuthentication(token);
             if (auth != null) {
                 SecurityContextHolder.getContext().setAuthentication(auth);
             }
         }
-
         filterChain.doFilter(servletRequest, servletResponse);
 
 

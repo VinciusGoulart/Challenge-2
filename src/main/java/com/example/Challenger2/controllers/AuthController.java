@@ -11,8 +11,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Objects;
-
 
 @RestController
 @RequestMapping("/auth")
@@ -24,7 +22,7 @@ public class AuthController {
     @PostMapping(value = "/signin")
     public ResponseEntity signIn(@RequestBody @Valid AccountCredentialsDTO data) {
 
-        var token = (Objects.equals(authServices.signIn(data), ResponseEntity.ok()) ? authServices.signIn(data) : null ) ;
+        var token = authServices.signIn(data);
 
         if (token == null) return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Invalid client request!");
 

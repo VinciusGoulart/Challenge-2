@@ -80,22 +80,20 @@ public class JwtTokenProvider {
         );
     }
 
-    private DecodedJWT decodedToken(String token) {
-        try {
+    private DecodedJWT decodedToken(String token) throws JWTDecodeException{
+
             Algorithm alg = Algorithm.HMAC256(secretKey.getBytes());
             JWTVerifier verifier = JWT.require(algorithm).build();
             DecodedJWT decodedJWT = verifier.verify(token);
 
             return decodedJWT;
-        } catch (RuntimeException e) {
-            throw new JWTDecodeException("fadsfdas");
-        }
+
     }
 
     public String resolveToken(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
 
-        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
+        if (bearerToken != null && bearerToken.startsWith("Bearer ") && bearerToken.length() == 231) {
             return bearerToken.substring("Bearer ".length());
         }
         return null;
