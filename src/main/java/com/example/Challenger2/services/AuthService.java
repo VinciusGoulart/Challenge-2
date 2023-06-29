@@ -22,7 +22,6 @@ public class AuthService {
     @Autowired
     private UserRepository repository;
 
-    @SuppressWarnings("rawtypes")
     public ResponseEntity signIn(AccountCredentialsDTO data) {
         try {
             var username = data.getUsername();
@@ -43,6 +42,5 @@ public class AuthService {
             throw new BadCredentialsException("Invalid username/password supplied!");
         }
     }
-
 
 }

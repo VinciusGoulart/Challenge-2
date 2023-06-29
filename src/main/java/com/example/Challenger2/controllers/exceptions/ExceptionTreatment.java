@@ -1,26 +1,31 @@
 package com.example.Challenger2.controllers.exceptions;
 
+import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.example.Challenger2.services.exceptions.BadRequestException;
 import com.example.Challenger2.services.exceptions.InvalidJwtAuthenticationException;
 import com.example.Challenger2.services.exceptions.NotFoundException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
-@ControllerAdvice
+@RestControllerAdvice
 public class ExceptionTreatment {
     @ExceptionHandler(BadRequestException.class)
     public final ResponseEntity badRequest(BadRequestException badRequest, HttpServletRequest request) {
@@ -102,10 +107,25 @@ public class ExceptionTreatment {
 
         return ResponseEntity.status(error.getStatus()).body(error);
     }
+    @ExceptionHandler(BadCredentialsException.class)
+    public final ResponseEntity invalidToken(BadCredentialsException ex, HttpServletRequest request) {
+        StandardError error = new StandardError(Instant.now(), HttpStatus.FORBIDDEN.value(), "Access denied, invalid credentials",
+                ex.getMessage(), request.getRequestURI());
 
-    @ExceptionHandler(TokenExpiredException.class)
-    public final ResponseEntity invalidCredentials(TokenExpiredException ex, HttpServletRequest request) {
-        StandardError error = new StandardError(Instant.now(), HttpStatus.FORBIDDEN.value(), "Access denied",
+        return ResponseEntity.status(error.getStatus()).body(error);
+    }
+
+    @ExceptionHandler(JWTDecodeException.class)
+    public final ResponseEntity invalidToken(JWTDecodeException ex, HttpServletRequest request) {
+        StandardError error = new StandardError(Instant.now(), HttpStatus.FORBIDDEN.value(), "Access denied, invalid credentials",
+                ex.getMessage(), request.getRequestURI());
+
+        return ResponseEntity.status(error.getStatus()).body(error);
+    }
+
+    @ExceptionHandler(ServletException.class)
+    public final ResponseEntity invalidToken(ServletException ex, HttpServletRequest request) {
+        StandardError error = new StandardError(Instant.now(), HttpStatus.FORBIDDEN.value(), "Access denied, invalid credentials",
                 ex.getMessage(), request.getRequestURI());
 
         return ResponseEntity.status(error.getStatus()).body(error);

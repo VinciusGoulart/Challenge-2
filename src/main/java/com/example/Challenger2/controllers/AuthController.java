@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Objects;
+
 
 @RestController
 @RequestMapping("/auth")
@@ -19,11 +21,10 @@ public class AuthController {
     @Autowired
     AuthService authServices;
 
-    @SuppressWarnings("rawtypes")
     @PostMapping(value = "/signin")
     public ResponseEntity signIn(@RequestBody @Valid AccountCredentialsDTO data) {
 
-        var token = authServices.signIn(data);
+        var token = (Objects.equals(authServices.signIn(data), ResponseEntity.ok()) ? authServices.signIn(data) : null ) ;
 
         if (token == null) return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Invalid client request!");
 

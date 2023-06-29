@@ -2,6 +2,7 @@ package com.example.Challenger2.security.util;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.JWTVerifier;
 import com.example.Challenger2.entities.DTOs.security.TokenDTO;
@@ -80,11 +81,15 @@ public class JwtTokenProvider {
     }
 
     private DecodedJWT decodedToken(String token) {
-        Algorithm alg = Algorithm.HMAC256(secretKey.getBytes());
-        JWTVerifier verifier = JWT.require(algorithm).build();
-        DecodedJWT decodedJWT = verifier.verify(token);
+        try {
+            Algorithm alg = Algorithm.HMAC256(secretKey.getBytes());
+            JWTVerifier verifier = JWT.require(algorithm).build();
+            DecodedJWT decodedJWT = verifier.verify(token);
 
-        return decodedJWT;
+            return decodedJWT;
+        } catch (RuntimeException e) {
+            throw new JWTDecodeException("fadsfdas");
+        }
     }
 
     public String resolveToken(HttpServletRequest request) {
