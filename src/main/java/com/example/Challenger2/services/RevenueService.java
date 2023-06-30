@@ -7,6 +7,7 @@ import com.example.Challenger2.services.exceptions.BadRequestException;
 import com.example.Challenger2.services.exceptions.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -16,6 +17,7 @@ public class RevenueService {
     @Autowired
     private RevenueRepository revenueRepository;
 
+    @Transactional()
     public Revenue save(RevenueDTO revenue) {
         if (checkDescription(revenue)) {
             throw new BadRequestException("This revenue already exists");
@@ -23,14 +25,17 @@ public class RevenueService {
         return revenueRepository.save(new Revenue(revenue));
     }
 
+    @Transactional(readOnly = true)
     public List<RevenueDTO> findAll() {
         return revenueRepository.findAll().stream().map(RevenueDTO::new).toList();
     }
 
+    @Transactional(readOnly = true)
     public Revenue findById(Long id) {
         return revenueRepository.findById(id).orElseThrow(() -> new NotFoundException("ID Not Found"));
     }
 
+    @Transactional()
     public Revenue update(Long id, RevenueDTO revenueDTO) {
         Revenue revenue = findById(id);
 
@@ -39,12 +44,14 @@ public class RevenueService {
         return revenueRepository.save(revenue);
     }
 
+    @Transactional()
     public void delete(Long id) {
         Revenue revenue = findById(id);
 
         revenueRepository.delete(revenue);
     }
 
+    @Transactional(readOnly = true)
     public List<RevenueDTO> findByDescription(String description) {
         List<RevenueDTO> list = revenueRepository.findByDescriptionIgnoreCase(
                 description).stream().map(RevenueDTO::new).toList();
@@ -56,6 +63,7 @@ public class RevenueService {
         return list;
     }
 
+    @Transactional(readOnly = true)
     public List<RevenueDTO> findByYearAndMonth(Integer year, Integer month) {
         List<RevenueDTO> list = revenueRepository.findByYearAndMonth(year, month).stream().map(RevenueDTO::new).toList();
 

@@ -6,7 +6,6 @@ import com.example.Challenger2.services.ExpenseService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -21,7 +20,6 @@ public class ExpenseController {
     private ExpenseService expenseService;
 
     @PostMapping
-    @Transactional
     public ResponseEntity<ExpenseDTO> save(@RequestBody @Valid ExpenseDTO expense, UriComponentsBuilder builder) {
         Expense insert = expenseService.save(expense);
 
@@ -50,7 +48,6 @@ public class ExpenseController {
     }
 
     @PutMapping(value = "/{id}")
-    @Transactional
     public ResponseEntity<ExpenseDTO> update(@PathVariable Long id, @RequestBody @Valid ExpenseDTO expenseDTO) {
         expenseDTO = new ExpenseDTO(expenseService.updateExpense(id, expenseDTO));
 
@@ -58,7 +55,6 @@ public class ExpenseController {
     }
 
     @DeleteMapping(value = "/{id}")
-    @Transactional
     public ResponseEntity delete(@PathVariable Long id) {
         expenseService.deleteExpense(id);
 

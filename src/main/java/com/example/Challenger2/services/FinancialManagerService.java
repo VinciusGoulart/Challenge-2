@@ -8,6 +8,7 @@ import com.example.Challenger2.repositories.RevenueRepository;
 import com.example.Challenger2.services.exceptions.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 
@@ -20,6 +21,7 @@ public class FinancialManagerService {
     @Autowired
     private RevenueRepository revenueRepository;
 
+    @Transactional(readOnly = true)
     public FinancialManagerDTO monthSummary(Integer year, Integer month) {
         FinancialManagerDTO fin = new FinancialManagerDTO();
 
