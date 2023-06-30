@@ -94,5 +94,6 @@ public class ExpenseService {
         oldExp.setDescription(newExp.getDescription());
         oldExp.setPrice(newExp.getPrice());
         oldExp.setDate(newExp.getDate());
+        oldExp.setCategory((newExp.getCategory()));
     }
 }

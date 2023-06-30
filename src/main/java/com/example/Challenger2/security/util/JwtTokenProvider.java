@@ -2,7 +2,6 @@ package com.example.Challenger2.security.util;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.JWTVerifier;
 import com.example.Challenger2.entities.DTOs.security.TokenDTO;
@@ -18,7 +17,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
@@ -38,7 +36,7 @@ public class JwtTokenProvider {
 
     @PostConstruct
     protected void init() {
-        secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes(StandardCharsets.UTF_8));
+        secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
         algorithm = Algorithm.HMAC256(secretKey.getBytes());
     }
 
@@ -52,18 +50,17 @@ public class JwtTokenProvider {
     }
 
     public TokenDTO refreshToken(String refreshToken) {
-        if (refreshToken.contains("Bearer ") && refreshToken.length() == 231){
+        if (refreshToken.contains("Bearer ") && refreshToken.length() == 231) {
 
             refreshToken = refreshToken.substring("Bearer ".length());
         }
 
         JWTVerifier verifier = JWT.require(algorithm).build();
         DecodedJWT decodedJWT = verifier.verify(refreshToken);
-
         String username = decodedJWT.getSubject();
         List<String> roles = decodedJWT.getClaim("roles").asList(String.class);
 
-        return createAccessToken(username,roles);
+        return createAccessToken(username, roles);
     }
     private String getAccessToken(String username, List<String> roles, Date now, Date validity) {
         String issuerURL = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
@@ -94,14 +91,11 @@ public class JwtTokenProvider {
         );
     }
 
-    private DecodedJWT decodedToken(String token) throws JWTDecodeException {
+    private DecodedJWT decodedToken(String token) {
 
-        Algorithm alg = Algorithm.HMAC256(secretKey.getBytes());
         JWTVerifier verifier = JWT.require(algorithm).build();
         DecodedJWT decodedJWT = verifier.verify(token);
-
         return decodedJWT;
-
     }
 
     public String resolveToken(HttpServletRequest request) {
